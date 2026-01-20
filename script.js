@@ -48,9 +48,9 @@ function generateFood() {
 function gameLoop() {
     if (!gameRunning) return;
 
+    checkWinCondition();
     moveSnake();
     checkCollisions();
-    checkWinCondition();
     draw();
     setTimeout(gameLoop, 150); // Velocidade do jogo
 }
@@ -58,6 +58,14 @@ function gameLoop() {
 // Mover cobra baseada na direção atual
 function moveSnake() {
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+    // Verificar se comer esta comida levaria à vitória
+    if (head.x === food.x && head.y === food.y && score - 1 <= 0) {
+        gameRunning = false;
+        gameState = 'win';
+        return;
+    }
+
     snake.unshift(head);
 
     // Verificar se comida foi comida
